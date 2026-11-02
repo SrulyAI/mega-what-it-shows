@@ -1,0 +1,113 @@
+<!doctype html>
+<!-- Static copy of kb page "#4471 &middot; three problems, not one" (+page.svx), hand-built: the kb export ships no build setup.
+     Layout and components copied from runbook.svelte, CauseTable.svelte, Callout.svelte, RenderStamp.svelte.
+     Table values and desk ref computed from the export's data and rules by our own scripts. Rendered 2026-11-02. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>#4471 &middot; three problems, not one &middot; support kb</title>
+<style>
+  :root {
+    --bg: #fbfaf7; --fg: #1d1d1b; --muted: #6b6a66; --line: #e3e0d8;
+    --accent: #2f6f5e; --warn: #b4501f; --warn-bg: #fbeee6; --note-bg: #eef5f2;
+    --mono: ui-monospace, 'Cascadia Code', Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #171716; --fg: #ecebe6; --muted: #9c9a93; --line: #34332f;
+      --accent: #6fbfa6; --warn: #f0905d; --warn-bg: #3a2418; --note-bg: #1d2c27;
+    }
+  }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 system-ui, sans-serif; }
+  .kb table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.92rem; }
+  .kb th, .kb td { border-bottom: 1px solid var(--line); padding: 0.35rem 0.5rem; text-align: left; }
+  .kb code { font-family: var(--mono); font-size: 0.88em; }
+  .kb a { color: var(--accent); }
+  .kb { max-width: 760px; margin: 0 auto; padding: 2rem 16px 4rem; }
+  .crumb { font: 0.8rem var(--mono); text-decoration: none; color: var(--muted); }
+  h1 { margin: 0.25rem 0 0.5rem; line-height: 1.2; }
+  .meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; color: var(--muted); font-size: 0.85rem; margin: 0; }
+  .status { border: 1px solid var(--line); border-radius: 99px; padding: 0 0.6rem; }
+  .stale { color: var(--warn); font-weight: 600; }
+  footer { margin-top: 3rem; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+  /* Callout.svelte */
+  aside { border-left: 4px solid var(--accent); padding: 0.5rem 1rem; margin: 1rem 0; background: var(--note-bg); }
+  aside.warn { border-color: var(--warn); background: var(--warn-bg); }
+  /* CauseTable.svelte */
+  .sum { font-size: 1.1rem; }
+  .tags { color: var(--muted); font-size: 0.85em; }
+  .note { color: var(--muted); font-size: 0.85em; }
+  .wrong td { background: var(--warn-bg); }
+  .wrong td:last-child { color: var(--warn); font-weight: 600; }
+  /* RenderStamp.svelte */
+  .stamp { margin: 2rem 0 0; font: 0.85rem var(--mono); color: var(--muted); }
+  .stamp b { color: var(--accent); letter-spacing: 0.04em; }
+  @media (max-width: 600px) { .kb table { display: block; overflow-x: auto; } }
+</style>
+</head>
+<body>
+<div class="kb">
+  <header>
+    <a class="crumb" href="/kb">support desk &middot; kb</a>
+    <h1>#4471 &middot; three problems, not one</h1>
+    <p class="meta">
+      <span>owner <b>SrulyAI</b></span>
+      <span class="status draft">draft</span>
+      <span>reviewed 2026-11-02 &middot; 0 days ago</span>
+    </p>
+  </header>
+  <main>
+  <p>The <a href="/kb/incidents/4471">#4471 page</a> calls every report merged into it one issue: the parser
+  reads dates month first. Read report by report, the merged queue holds three different problems.
+  One fix will not close them all.</p>
+
+  <aside class="warn"><p>Not one issue. Three problems, three tickets. Fixing the parser leaves the other two open.</p></aside>
+
+  <h2>What was merged</h2>
+
+  <p class="sum"><strong>412</strong> reports merged into #4471 &middot; <strong>2</strong> causes</p>
+  <table>
+    <thead><tr><th>cause</th><th>reports</th><th>tagged as</th><th>tenants</th><th>seen</th><th></th></tr></thead>
+    <tbody>
+      <tr><td><code>parser</code></td><td>379</td><td class="tags">parser &times;356 &middot; hint &times;23</td><td>11</td><td>2026-04-01 &rarr; 2026-10-04</td><td>#4471</td></tr>
+      <tr class="wrong"><td><code>hint</code></td><td>33</td><td class="tags">hint &times;18 &middot; parser &times;15</td><td>3</td><td>2026-04-17 &rarr; 2026-09-22</td><td>not this ticket &mdash; no ticket of its own</td></tr>
+    </tbody>
+  </table>
+  <p class="note">5 reports read as a one-day move; filed under <code>parser</code> by tenant.</p>
+
+  <p>The table groups reports by tenant and booking form, not by intake&rsquo;s tag. Intake tags come from
+  the reporter&rsquo;s browser and disagree with the cause in both directions.</p>
+
+  <h2>The three problems</h2>
+
+  <ol>
+    <li><strong>Parser swaps day and month.</strong> The shared parser reads dates month first; every tenant in
+    #4471 writes the day first. All channels. Ticket: <a href="https://github.com/SrulyAI/mega-what-it-shows/issues/1">https://github.com/SrulyAI/mega-what-it-shows/issues/1</a>.</li>
+    <li><strong>booking-v3 hint asks for the month first.</strong> The booking-v3 form prints <code>MM/DD/YYYY</code> under
+    its date field. People type what the hint says and the form reads it day first. Form channel
+    at booking-v3 tenants only. The parser fix does not touch it. Ticket: <a href="https://github.com/SrulyAI/mega-what-it-shows/issues/2">https://github.com/SrulyAI/mega-what-it-shows/issues/2</a>.</li>
+    <li><strong>Dates move by one day.</strong> No swap: the date lands a day early or late, and the same meeting
+    shows different days in different cities. Listed in the desk&rsquo;s own notes as a one-day move but
+    filed under the parser. Cause not confirmed; it looks like time zones. Ticket: <a href="https://github.com/SrulyAI/mega-what-it-shows/issues/3">https://github.com/SrulyAI/mega-what-it-shows/issues/3</a>.</li>
+  </ol>
+
+  <h2>Why they were merged</h2>
+
+  <p>Triage merges on subject line alone (<a href="/kb/decisions/0001-dedupe-by-subject">decision 0001</a>).
+  The three problems share subject lines (&ldquo;Wrong day on the invite&rdquo; turns up in all three), so the
+  subject rule cannot tell them apart. Only the body, the tenant and the channel can.</p>
+
+  <h2>Lessons</h2>
+
+  <ul>
+    <li>Count reports by cause, not by subject. A big ticket can hide more than one bug.</li>
+    <li>Read a sample of bodies before marking a merged ticket known.</li>
+  </ul>
+
+  <p class="stamp">desk ref <b>DR-FE2J-AZQT</b></p>
+  </main>
+  <footer>Pages are written by people. Tables and charts are built from data at render time.</footer>
+</div>
+</body>
+</html>

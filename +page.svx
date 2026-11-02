@@ -1,0 +1,53 @@
+---
+layout: runbook
+title: '#4471 · three problems, not one'
+owner: SrulyAI
+status: draft
+reviewed: 2026-11-02
+signature: SrulyAI
+---
+
+<script>
+  import CauseTable from '#lib/kb/CauseTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+The [#4471 page](/kb/incidents/4471) calls every report merged into it one issue: the parser
+reads dates month first. Read report by report, the merged queue holds three different problems.
+One fix will not close them all.
+
+<Callout kind="warn">
+Not one issue. Three problems, three tickets. Fixing the parser leaves the other two open.
+</Callout>
+
+## What was merged
+
+<CauseTable ticket={4471} />
+
+The table groups reports by tenant and booking form, not by intake's tag. Intake tags come from
+the reporter's browser and disagree with the cause in both directions.
+
+## The three problems
+
+1. **Parser swaps day and month.** The shared parser reads dates month first; every tenant in
+   #4471 writes the day first. All channels. Ticket: [https://github.com/SrulyAI/mega-what-it-shows/issues/1](https://github.com/SrulyAI/mega-what-it-shows/issues/1).
+2. **booking-v3 hint asks for the month first.** The booking-v3 form prints `MM/DD/YYYY` under
+   its date field. People type what the hint says and the form reads it day first. Form channel
+   at booking-v3 tenants only. The parser fix does not touch it. Ticket: [https://github.com/SrulyAI/mega-what-it-shows/issues/2](https://github.com/SrulyAI/mega-what-it-shows/issues/2).
+3. **Dates move by one day.** No swap: the date lands a day early or late, and the same meeting
+   shows different days in different cities. Listed in the desk's own notes as a one-day move but
+   filed under the parser. Cause not confirmed; it looks like time zones. Ticket: [https://github.com/SrulyAI/mega-what-it-shows/issues/3](https://github.com/SrulyAI/mega-what-it-shows/issues/3).
+
+## Why they were merged
+
+Triage merges on subject line alone ([decision 0001](/kb/decisions/0001-dedupe-by-subject)).
+The three problems share subject lines ("Wrong day on the invite" turns up in all three), so the
+subject rule cannot tell them apart. Only the body, the tenant and the channel can.
+
+## Lessons
+
+- Count reports by cause, not by subject. A big ticket can hide more than one bug.
+- Read a sample of bodies before marking a merged ticket known.
+
+<RenderStamp {signature} />
